@@ -2,7 +2,7 @@ const express = require('express');
 const AWS = require('aws-sdk');
 const cors = require('cors');
 const multer = require('multer');
-const multerS3 = require('multer-s3');
+const multerS3 = require('multer-s3-transform');
 const dotenv = require('dotenv');
 
 dotenv.config();
