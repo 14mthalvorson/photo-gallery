@@ -1,72 +1,53 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import { Grid, Container, Box } from "@mui/material";
+import axios from "axios";
 
-const API_URL = 'http://18.233.100.117:3000';
-
-function App() {
+const App = () => {
   const [images, setImages] = useState([]);
-  const [selectedFile, setSelectedFile] = useState(null);
 
   useEffect(() => {
-    fetchImages();
+    const fetchData = async () => {
+      const result = await axios("http://18.233.100.117:3001/images");
+      setImages(result.data);
+    };
+    fetchData();
   }, []);
 
-  async function fetchImages() {
-    try {
-      const response = await axios.get(`${API_URL}/images`);
-      setImages(response.data);
-    } catch (error) {
-      console.error('Error fetching images:', error);
-    }
-  }
-
-  async function uploadImage() {
-    if (!selectedFile) return;
-
-    const formData = new FormData();
-    formData.append('image', selectedFile);
-
-    try {
-      const response = await axios.post(`${API_URL}/upload`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-
-      setImages([...images, { key: response.data.key, url: response.data.imageUrl }]);
-      setSelectedFile(null);
-    } catch (error) {
-      console.error('Error uploading image:', error);
-    }
-  }
-
-  async function deleteImage(key) {
-    try {
-      await axios.delete(`${API_URL}/delete/${key}`);
-      setImages(images.filter((image) => image.key !== key));
-    } catch (error) {
-      console.error('Error deleting image:', error);
-    }
-  }
-
-  function handleFileChange(event) {
-    setSelectedFile(event.target.files[0]);
-  }
+  const handleDownload = async (key) => {
+    const response = await axios.get(
+      `http://18.233.100.117:3001/download?key=${key}`,
+      { responseType: "blob" }
+    );    
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", key);
+    document.body.appendChild(link);
+    link.click();
+  };
 
   return (
-    <div className="App">
-      <h1>Photo Gallery</h1>
-      <input type="file" onChange={handleFileChange} />
-      <button onClick={uploadImage}>Upload</button>
-      <div className="image-grid">
-        {images.map((image) => (
-          <div key={image.key} className="image-container">
-            <img src={image.url} alt="" />
-            <button onClick={() => deleteImage(image.key)}>Delete</button>
-          </div>
-        ))}
-      </div>
-    </div>
+    <Container maxWidth="md">
+      <Box my={4}>
+        <Grid container spacing={4}>
+          {images.map((image) => (
+            <Grid item xs={12} sm={6} md={4} key={image.key}>
+              <Box>
+                <img
+                  src={image.url}
+                  alt={image.key}
+                  style={{ width: "100%", height: "auto", objectFit: "cover" }}
+                />
+                <button onClick={() => handleDownload(image.key)}>
+                  Download
+                </button>
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+    </Container>
   );
-}
+};
 
 export default App;
