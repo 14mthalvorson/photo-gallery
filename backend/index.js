@@ -14,15 +14,19 @@ AWS.config.update({ region: process.env.AWS_REGION });
 const s3 = new AWS.S3();
 
 const upload = multer({
-  storage: multerS3({
-    s3: s3,
-    bucket: process.env.S3_BUCKET_NAME,
-    acl: 'public-read',
-    key: (req, file, cb) => {
-      cb(null, Date.now().toString() + '-' + file.originalname);
-    },
-  }),
-});
+    storage: multerS3({
+      s3: s3,
+      bucket: process.env.S3_BUCKET_NAME,
+      // Remove the following line
+      // acl: 'public-read',
+      metadata: function (req, file, cb) {
+        cb(null, { fieldName: file.fieldname });
+      },
+      key: function (req, file, cb) {
+        cb(null, Date.now().toString() + '-' + file.originalname);
+      },
+    }),
+  });
 
 app.post('/upload', upload.single('image'), (req, res) => {
   res.status(200).json({ imageUrl: req.file.location });
