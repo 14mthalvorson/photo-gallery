@@ -62,7 +62,7 @@ app.delete('/delete/:key', async (req, res) => {
 app.get("/download", async (req, res) => {
     const key = req.query.key;
     const downloadParams = {
-      Bucket: process.env.BUCKET_NAME,
+      Bucket: process.env.S3_BUCKET_NAME,
       Key: key,
     };
   
