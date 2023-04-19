@@ -7,7 +7,7 @@ const App = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await axios("http://18.233.100.117:3000/images");
+      const result = await axios("https://1l0mjwqhxi.execute-api.us-east-1.amazonaws.com/beta/images");
       setImages(result.data);
     };
     fetchData();
@@ -15,7 +15,7 @@ const App = () => {
 
   const handleDownload = async (key) => {
     const response = await axios.get(
-      `http://18.233.100.117:3000/download?key=${key}`,
+      `https://1l0mjwqhxi.execute-api.us-east-1.amazonaws.com/beta/download?key=${key}`,
       { responseType: "blob" }
     );    
     const url = window.URL.createObjectURL(new Blob([response.data]));
