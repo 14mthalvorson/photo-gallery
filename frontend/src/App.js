@@ -8,7 +8,7 @@ const App = () => {
   useEffect(() => {
     const fetchData = async () => {
       const result = await axios("https://1l0mjwqhxi.execute-api.us-east-1.amazonaws.com/beta/images");
-      console.log("API response:", result.data);
+      console.log('API response:', result);
       setImages(result.data);
     };
     fetchData();
