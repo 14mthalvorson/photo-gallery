@@ -14,19 +14,6 @@ const App = () => {
     fetchData();
   }, []);  
 
-  const handleDownload = async (key) => {
-    const response = await axios.get(
-      `https://1l0mjwqhxi.execute-api.us-east-1.amazonaws.com/beta/download?key=${key}`,
-      { responseType: "blob" }
-    );    
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", key);
-    document.body.appendChild(link);
-    link.click();
-  };
-
   return (
     <Container maxWidth="md">
       <Box my={4}>
