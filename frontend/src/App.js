@@ -26,9 +26,6 @@ const App = () => {
                   alt={image.key}
                   style={{ width: "100%", height: "auto", objectFit: "cover" }}
                 />
-                <button onClick={() => handleDownload(image.key)}>
-                  Download
-                </button>
               </Box>
             </Grid>
           ))}
