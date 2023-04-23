@@ -27,10 +27,6 @@ const upload = multer({
     }),
 });
 
-app.post('/upload', upload.single('image'), (req, res) => {
-    res.status(200).json({ imageUrl: req.file.location });
-});
-
 app.get('/images', async (req, res) => {
     try {
         const data = await s3
@@ -41,18 +37,6 @@ app.get('/images', async (req, res) => {
             url: `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${item.Key}`,
         }));
         res.status(200).json(images);
-    } catch (error) {
-        res.status(500).json({ error });
-    }
-});
-
-app.delete('/delete/:key', async (req, res) => {
-    try {
-        const key = req.params.key;
-        await s3
-            .deleteObject({ Bucket: process.env.S3_BUCKET_NAME, Key: key })
-            .promise();
-        res.status(200).json({ message: 'Image deleted successfully' });
     } catch (error) {
         res.status(500).json({ error });
     }
