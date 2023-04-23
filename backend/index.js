@@ -58,24 +58,6 @@ app.delete('/delete/:key', async (req, res) => {
     }
 });
 
-app.get("/download", async (req, res) => {
-    const key = req.query.key;
-    const downloadParams = {
-        Bucket: process.env.S3_BUCKET_NAME,
-        Key: key,
-    };
-
-    try {
-        const data = await s3.getObject(downloadParams).promise();
-        res.set("Content-Type", data.ContentType);
-        res.set("Content-Disposition", `attachment; filename=${key}`);
-        res.send(data.Body);
-    } catch (error) {
-        console.error("Error while downloading image:", error);
-        res.status(500).json({ error: `Error while downloading image: ${error.message}` });
-    }
-});
-
 // Add the following lines:
 const server = serverlessExpress.createServer(app);
 exports.handler = (event, context) => {
