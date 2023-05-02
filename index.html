@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Martin's Photos</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Martin's Photos</h1>
+    <div id="photos"></div>
+
+    <script>
+    $(document).ready(function() {
+        $.get('https://jthelms047.execute-api.us-east-1.amazonaws.com/beta', function(data) {
+            const photos = JSON.parse(data);
+            photos.forEach(function(photo) {
+                $('#photos').append('<img src="' + photo + '" />');
+            });
+        });
+    });
+    </script>
+</body>
+</html>
